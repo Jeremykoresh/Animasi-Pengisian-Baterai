@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battery Wave Animation</title>
+<style>
+    body {
+        background: #121212;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #fff;
+    }
+
+    .battery-top {
+        width: 45px;
+        height: 15px;
+        background: #444;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .battery {
+        width: 150px;
+        height: 300px;
+        border: 4px solid #444;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+        background: #121212;
+        box-shadow: 0 0 25px rgba(0,0,0,0.8);
+    }
+
+    .text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 38px;
+        font-weight: 900;
+        z-index: 10;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.9);
+    }
+
+    .liquid {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5%;
+        background: #ff3333;
+        transition: height 0.2s linear, background 0.5s;
+        z-index: 1;
+    }
+
+    .liquid::before, .liquid::after {
+        content: "";
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        background: #121212;
+        left: 50%;
+        top: -305px;
+        transform: translateX(-50%);
+        border-radius: 40%;
+        animation: wave 4s infinite linear;
+    }
+
+    .liquid::after {
+        background: rgba(18, 18, 18, 0.7);
+        border-radius: 45%;
+        top: -315px;
+        animation: wave 5s infinite linear;
+        z-index: 2;
+    }
+
+    @keyframes wave {
+        0% { transform: translateX(-50%) rotate(0deg); }
+        100% { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    button {
+        margin-top: 35px;
+        padding: 14px 35px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        background: #fff;
+        color: #121212;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+    }
+
+    button:hover {
+        background: #00ffcc;
+        box-shadow: 0 5px 25px #00ffcc;
+        transform: translateY(-2px);
+    }
+
+    button:disabled {
+        background: #555;
+        color: #888;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+</style>
+</head>
+<body>
+<div class="battery-top"></div>
+<div class="battery">
+    <div class="text" id="txt">5%</div>
+    <div class="liquid" id="liq"></div>
+</div>
+<button onclick="cas()" id="btn">Cas Sekarang</button>
+<script>
+    function cas() {
+        let p = 5;
+        const liq = document.getElementById('liq');
+        const txt = document.getElementById('txt');
+        const btn = document.getElementById('btn');
+        btn.disabled = true; 
+        btn.innerText = "Mengisi Daya...";
+        const int = setInterval(() => {
+            p += Math.random() * 2.5; 
+            if (p >= 100) { 
+                p = 100; 
+                clearInterval(int); 
+                btn.innerText = "Baterai Penuh!";
+                liq.style.height = '110%'; 
+            } else {
+                liq.style.height = p + '%';
+            }
+            txt.innerText = Math.floor(p) + '%';
+            const color = p < 30 ? '#ff3333' : p < 75 ? '#ffcc00' : '#00ffcc';
+            liq.style.background = color;
+            liq.style.boxShadow = `0 0 35px ${color} inset`;
+        }, 120);
+    }
+</script>
+
+</body>
+</html>
